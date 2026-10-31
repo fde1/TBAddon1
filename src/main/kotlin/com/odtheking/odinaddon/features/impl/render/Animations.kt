@@ -6,6 +6,7 @@ import com.odtheking.odin.clickgui.settings.RenderableSetting.Companion.withDepe
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.features.Module
+import org.joml.Matrix4f
 
 /**
  * Parts taken from:
@@ -36,9 +37,9 @@ object Animations : Module (
         matrix.apply {
             translate(x, y, z)
 
-            mulPose(Axis.XP.rotationDegrees(pitch))
-            mulPose(Axis.YP.rotationDegrees(yaw))
-            mulPose(Axis.ZP.rotationDegrees(roll))
+            mulPose(Matrix4f().rotation(Axis.XP.rotationDegrees(pitch)))
+            mulPose(Matrix4f().rotation(Axis.YP.rotationDegrees(yaw)))
+            mulPose(Matrix4f().rotation(Axis.ZP.rotationDegrees(roll)))
             scale(size, size, size)
         }
     }

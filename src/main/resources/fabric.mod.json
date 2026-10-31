@@ -3,7 +3,7 @@
   "id": "odinaddon",
   "version": "${version}",
   "name": "OdinAddon",
-  "description": "",
+  "description": "${mod_description}",
   "authors": [],
   "contact": {},
   "license": "BSD-3-Clause",
@@ -24,6 +24,6 @@
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
-    "odin": "*"
+    "odin": ">=0.4.0"
   }
 }

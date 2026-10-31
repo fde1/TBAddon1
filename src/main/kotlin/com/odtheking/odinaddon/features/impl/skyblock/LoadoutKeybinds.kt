@@ -1,5 +1,6 @@
 package com.odtheking.odinaddon.features.impl.skyblock
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.odtheking.odin.clickgui.settings.RenderableSetting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
@@ -12,24 +13,23 @@ import com.odtheking.odin.utils.containsOneOf
 import com.odtheking.odin.utils.sendCommand
 import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import org.lwjgl.glfw.GLFW
 
 object LoadoutKeybinds : Module(
     name = "Loadout Binds",
     description = "Binds for loadouts, wardrobe, etc."
 ) {
     //Remove when Odin commands point to correct commands
-    private val wardrobe by KeybindSetting("Wardrobe", GLFW.GLFW_KEY_UNKNOWN, desc = "Keybind to open wardrobe.").onPress {
+    private val wardrobe by KeybindSetting("Wardrobe", InputConstants.UNKNOWN, desc = "Keybind to open wardrobe.").onPress {
         if (!enabled || !LocationUtils.isInSkyblock) return@onPress
         sendCommand("wardrobe")
     }
 
-    private val loadouts by KeybindSetting("Loadouts", GLFW.GLFW_KEY_UNKNOWN, desc = "Keybind to open loadouts menu.").onPress {
+    private val loadouts by KeybindSetting("Loadouts", InputConstants.UNKNOWN, desc = "Keybind to open loadouts menu.").onPress {
         if (!enabled || !LocationUtils.isInSkyblock) return@onPress
         sendCommand("loadouts")
     }
 
-    private val equipment by KeybindSetting("Equipment/Stats", GLFW.GLFW_KEY_UNKNOWN, desc = "Keybind to open stats.").onPress {
+    private val equipment by KeybindSetting("Equipment/Stats", InputConstants.UNKNOWN, desc = "Keybind to open stats.").onPress {
         if (!enabled || !LocationUtils.isInSkyblock) return@onPress
         sendCommand("stats")
     }
@@ -37,17 +37,17 @@ object LoadoutKeybinds : Module(
     private val stopUnequip by BooleanSetting("Stop Unequip", false, desc = "Stops from unequipping armor in wardrobe.")
 
     private val advanced by DropdownSetting("Show Settings", desc = "")
-    private val wardrobe1 by KeybindSetting("Default Slot 1", GLFW.GLFW_KEY_1, desc = "Keybind to equip the first wardrobe slot.").withDependency { advanced }
-    private val wardrobe2 by KeybindSetting("Default Slot 2", GLFW.GLFW_KEY_2, desc = "Keybind to equip the second wardrobe slot.").withDependency { advanced }
-    private val wardrobe3 by KeybindSetting("Default Slot 3", GLFW.GLFW_KEY_3, desc = "Keybind to equip the third wardrobe slot.").withDependency { advanced }
-    private val wardrobe4 by KeybindSetting("Default Slot 4", GLFW.GLFW_KEY_4, desc = "Keybind to equip the fourth wardrobe slot.").withDependency { advanced }
-    private val wardrobe5 by KeybindSetting("Default Slot 5", GLFW.GLFW_KEY_5, desc = "Keybind to equip the fifth wardrobe slot.").withDependency { advanced }
-    private val wardrobe6 by KeybindSetting("Default Slot 6", GLFW.GLFW_KEY_6, desc = "Keybind to equip the sixth wardrobe slot.").withDependency { advanced }
-    private val wardrobe7 by KeybindSetting("Default Slot 7", GLFW.GLFW_KEY_7, desc = "Keybind to equip the seventh wardrobe slot.").withDependency { advanced }
-    private val wardrobe8 by KeybindSetting("Default Slot 8", GLFW.GLFW_KEY_8, desc = "Keybind to equip the eighth wardrobe slot.").withDependency { advanced }
-    private val wardrobe9 by KeybindSetting("Default Slot 9", GLFW.GLFW_KEY_9, desc = "Keybind to equip the ninth wardrobe slot.").withDependency { advanced }
-    private val nextPage by KeybindSetting("Next Page", GLFW.GLFW_KEY_D, desc = "Keybind to go to the next page of wardrobe.").withDependency { advanced }
-    private val prevPage by KeybindSetting("Prev Page", GLFW.GLFW_KEY_A, desc = "Keybind to go to the previous page of wardrobe.").withDependency { advanced }
+    private val wardrobe1 by KeybindSetting("Default Slot 1", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_1), desc = "Keybind to equip the first wardrobe slot.").withDependency { advanced }
+    private val wardrobe2 by KeybindSetting("Default Slot 2", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_2), desc = "Keybind to equip the second wardrobe slot.").withDependency { advanced }
+    private val wardrobe3 by KeybindSetting("Default Slot 3", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_3), desc = "Keybind to equip the third wardrobe slot.").withDependency { advanced }
+    private val wardrobe4 by KeybindSetting("Default Slot 4", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_4), desc = "Keybind to equip the fourth wardrobe slot.").withDependency { advanced }
+    private val wardrobe5 by KeybindSetting("Default Slot 5", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_5), desc = "Keybind to equip the fifth wardrobe slot.").withDependency { advanced }
+    private val wardrobe6 by KeybindSetting("Default Slot 6", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_6), desc = "Keybind to equip the sixth wardrobe slot.").withDependency { advanced }
+    private val wardrobe7 by KeybindSetting("Default Slot 7", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_7), desc = "Keybind to equip the seventh wardrobe slot.").withDependency { advanced }
+    private val wardrobe8 by KeybindSetting("Default Slot 8", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_8), desc = "Keybind to equip the eighth wardrobe slot.").withDependency { advanced }
+    private val wardrobe9 by KeybindSetting("Default Slot 9", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_9), desc = "Keybind to equip the ninth wardrobe slot.").withDependency { advanced }
+    private val nextPage by KeybindSetting("Next Page", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_D), desc = "Keybind to go to the next page of wardrobe.").withDependency { advanced }
+    private val prevPage by KeybindSetting("Prev Page", InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_A), desc = "Keybind to go to the previous page of wardrobe.").withDependency { advanced }
 
 
     private const val MIN_INVENTORY_SIZE = 0
@@ -74,8 +74,9 @@ object LoadoutKeybinds : Module(
         val screenTitle = screen.title.string.takeIf{ it.containsOneOf("Loadouts", "Armor Sets")} ?: return false
         if (checkPageClick(screen, key)) return true
 
+        val pressedKey = InputConstants.Type.KEYBOARD.getOrCreate(key)
         val slotIndex = arrayOf(wardrobe1, wardrobe2, wardrobe3, wardrobe4, wardrobe5, wardrobe6, wardrobe7, wardrobe8, wardrobe9).indexOfFirst {
-            it.value == key
+            it == pressedKey
         }.takeIf { it != -1 } ?: return false
 
         val toClick = when {
@@ -92,11 +93,12 @@ object LoadoutKeybinds : Module(
     }
 
     private fun checkPageClick(screen: AbstractContainerScreen<*>, key: Int): Boolean {
-        if (key != nextPage.value && key != prevPage.value) return false
+        val pressedKey = InputConstants.Type.KEYBOARD.getOrCreate(key)
+        if (pressedKey != nextPage && pressedKey != prevPage) return false
 
         val toClick = when {
-            "Loadouts" in screen.title.string -> if (key == prevPage.value) LOADOUTS_PREV_PAGE_SLOT else LOADOUTS_NEXT_PAGE_SLOT
-            "Armor Sets" in screen.title.string -> if (key == prevPage.value) WARDROBE_PREV_PAGE_SLOT else WARDROBE_NEXT_PAGE_SLOT
+            "Loadouts" in screen.title.string -> if (pressedKey == prevPage) LOADOUTS_PREV_PAGE_SLOT else LOADOUTS_NEXT_PAGE_SLOT
+            "Armor Sets" in screen.title.string -> if (pressedKey == prevPage) WARDROBE_PREV_PAGE_SLOT else WARDROBE_NEXT_PAGE_SLOT
             else -> return false
         }
 

@@ -9,13 +9,11 @@ import com.odtheking.odin.events.RenderExtractEvent
 import com.odtheking.odin.events.core.CancellableEvent
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.events.core.on
-import com.odtheking.odin.utils.equalsOneOf
 import com.odtheking.odin.utils.itemId
 import com.odtheking.odinaddon.features.impl.skyblock.event.KeyboardEvent
 import com.odtheking.odinaddon.features.impl.skyblock.event.MouseEvent
 import com.odtheking.odinaddon.mixin.KeyMappingAccessor
 import net.minecraft.client.KeyMapping
-import org.lwjgl.glfw.GLFW
 
 object Click : Module(
     name = "Auto Clicker",
@@ -25,7 +23,7 @@ object Click : Module(
     private val lcHold by BooleanSetting("Left Click Hold", false, desc = "Hold to Use AC").withDependency { lcEnabled }
     private val lcUse by KeybindSetting(
         "Use LC",
-        GLFW.GLFW_KEY_UNKNOWN,
+        InputConstants.UNKNOWN,
         desc = "Keybind to Use"
     ).withDependency { lcEnabled }
     private val termOnly by BooleanSetting(
@@ -49,7 +47,7 @@ object Click : Module(
     ).withDependency { rcEnabled }
     private val rcUse by KeybindSetting(
         "Use RC",
-        GLFW.GLFW_KEY_UNKNOWN,
+        InputConstants.UNKNOWN,
         desc = "Keybind to Use"
     ).withDependency { rcEnabled }
     private val rightCps by NumberSetting(
@@ -66,30 +64,41 @@ object Click : Module(
 
     private var lastLCState = false;
     private var lastRCState = false;
+    private val heldMouseKeys = mutableSetOf<InputConstants.Key>()
 
     init {
         nextRightClick = 0.0
         nextLeftClick = 0.0
         on<RenderExtractEvent> {
             val nowMillis = System.currentTimeMillis()
-            if (mc.gui.screen() != null || (!rcEnabled && !lcEnabled)) return@on;
+            if (mc.gui.screen() != null) {
+                heldMouseKeys.clear()
+                return@on
+            }
+            if (!rcEnabled && !lcEnabled) return@on
             if (rcEnabled) tryRightClick(nowMillis)
             if (lcEnabled) tryLeftClick(nowMillis, termOnly)
         }
 
         on<MouseEvent.Click> {
-            handleInputEvent(this, button, termOnly);
+            val key = InputConstants.Type.MOUSE.getOrCreate(button)
+            heldMouseKeys.add(key)
+            handleInputEvent(this, key, termOnly);
+        }
+
+        on<MouseEvent.Release> {
+            heldMouseKeys.remove(InputConstants.Type.MOUSE.getOrCreate(button))
         }
 
         on<KeyboardEvent> {
-            handleInputEvent(this, button.value, termOnly);
+            handleInputEvent(this, button, termOnly);
         }
     }
 
     private fun tryLeftClick(now: Long, termOnly: Boolean = false) {
         if (!termOnly) {
             if ((!lcUse.isDown && lcHold) || (!lcHold && !lastLCState)) return;
-        } else if (!(mc.player?.mainHandItem?.itemId == "TERMINATOR" && (mc.options.keyUse as KeyMappingAccessor).boundKey.isDown)) return
+        } else if (!(mc.player?.mainHandItem?.itemId == "TERMINATOR" && mc.options.keyUse.isDown)) return
 
         if (now < nextLeftClick) return;
 
@@ -109,32 +118,28 @@ object Click : Module(
         KeyMapping.click(key);
     }
 
-    private fun handleInputEvent(event: CancellableEvent, button: Int, termOnly: Boolean = false) {
-        val left = (mc.options.keyAttack as KeyMappingAccessor).boundKey.value
-        val right = (mc.options.keyUse as KeyMappingAccessor).boundKey.value
-        val shouldTerm = mc.player?.mainHandItem?.itemId == "TERMINATOR" && (mc.options.keyUse as KeyMappingAccessor).boundKey.isDown
+    private fun handleInputEvent(event: CancellableEvent, button: InputConstants.Key, termOnly: Boolean = false) {
+        val left = (mc.options.keyAttack as KeyMappingAccessor).boundKey
+        val right = (mc.options.keyUse as KeyMappingAccessor).boundKey
+        val shouldTerm = mc.player?.mainHandItem?.itemId == "TERMINATOR" && mc.options.keyUse.isDown
 
         val lcActive = if (termOnly) shouldTerm else lcEnabled && ((lcHold && lcUse.isDown) || (!lcHold && lastLCState))
         val rcActive = rcEnabled && ((rcHold && rcUse.isDown) || (!rcHold && lastRCState))
 
-        when (button) {
-            left -> if (lcActive) event.cancel()
-            right -> if (rcActive) event.cancel()
-        }
+        if (button == left && lcActive) event.cancel()
+        if (button == right && rcActive) event.cancel()
 
-        if (!lcHold && lcEnabled && button == lcUse.value) lastLCState = !lastLCState
-        if (!rcHold && rcEnabled && button == rcUse.value) lastRCState = !lastRCState
+        if (!lcHold && lcEnabled && button == lcUse) lastLCState = !lastLCState
+        if (!rcHold && rcEnabled && button == rcUse) lastRCState = !lastRCState
     }
 
 
     val InputConstants.Key.isDown: Boolean
         get() {
-            val v = this.value;
-            val mouse = if (v in 0..7) GLFW.glfwGetMouseButton(mc.window.handle(), v) else -1;
-            val key =
-                if (v >= GLFW.GLFW_KEY_SPACE && v <= GLFW.GLFW_KEY_LAST) GLFW.glfwGetKey(mc.window.handle(), v) else -1;
-
-            return 1.equalsOneOf(mouse, key);
+            return when (type) {
+                InputConstants.Type.KEYBOARD -> InputConstants.isKeyDown(value)
+                InputConstants.Type.MOUSE -> this in heldMouseKeys
+            }
         }
 
 }

@@ -1,5 +1,6 @@
 package com.odtheking.odinaddon.features.impl.skyblock
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
@@ -18,13 +19,12 @@ import com.odtheking.odinaddon.utils.PlayerScheduler.scheduleSwap
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
-import org.lwjgl.glfw.GLFW
 
 object ItemSwap: Module(
     name = "Item Swap",
     description = "Automatically swaps to a paired item after releasing use item key."
 ) {
-    private val setItemPairKeybind by KeybindSetting("Link New Swap Pair", GLFW.GLFW_KEY_UNKNOWN, desc = "Links one item to another to swap to.")
+    private val setItemPairKeybind by KeybindSetting("Link New Swap Pair", InputConstants.UNKNOWN, desc = "Links one item to another to swap to.")
     private val delay by NumberSetting("Delay", 3, 1..20, desc = "Delay in ticks before swapping to the other item")
     private val swapMap = this.registerSetting(MapSetting("Item Swap Map", mutableMapOf<String, SwapItem>())).value
 
@@ -32,7 +32,7 @@ object ItemSwap: Module(
 
     init {
         on<ScreenEvent.KeyPress> {
-            if (screen !is InventoryScreen || input.key != setItemPairKeybind.value) return@on
+            if (screen !is InventoryScreen || InputConstants.Type.KEYBOARD.getOrCreate(input.key) != setItemPairKeybind) return@on
             val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item.takeUnless { it!!.isEmpty } ?: return@on
             cancel()
 

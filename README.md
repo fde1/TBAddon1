@@ -1,12 +1,17 @@
-# UC03 Addon
+# TBAddon
 
-This is a project made using [OdinAddon](https://github.com/odtheking/OdinAddon), which allows adding of modules to [OdinFabric](https://github.com/odtheking/OdinFabric) using an external JAR.
+TBAddon adds custom modules to [Odin](https://github.com/odtheking/Odin) as a separate Fabric mod.
 
-## Dependencies
+## Supported versions
 
-To setup the addon, you will need the latest version of OdinFabric 1.21.8, currently 0.1.2. This project will be ported to 1.21.10 in the future.
+- Minecraft Java Edition 26.3
+- Odin 0.4.0 or newer
+- Fabric Loader 0.19.5 or newer
+- Fabric API 0.165.0+26.3
+- Fabric Language Kotlin 1.13.12+kotlin.2.4.0 or newer
+- Java 25
 
 ### Notes
 
-- This project is in NO WAY directly maintained nor endorsed by OdinFabric/Hypixel.
-- All features are use at your own risk.
+- This project is not directly maintained or endorsed by Odin or Hypixel.
+- Use the features at your own risk.

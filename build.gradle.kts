@@ -17,7 +17,6 @@ repositories {
     mavenCentral()
     maven("https://jitpack.io")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-    maven("https://maven.terraformersmc.com/")
     maven("https://api.modrinth.com/maven")
     ivy {
         url = uri("https://github.com/odtheking/Odin/releases/download")
@@ -45,7 +44,6 @@ dependencies {
         include("com.github.stivais:Commodore:$it")
     }
 
-    compileOnly("com.terraformersmc:modmenu:${property("modmenu_version")}")
     property("minecraft_lwjgl_version").let { lwjglVersion ->
         implementation("org.lwjgl:lwjgl-nanovg:$lwjglVersion")
         include("org.lwjgl:lwjgl-nanovg:$lwjglVersion")
@@ -55,8 +53,6 @@ dependencies {
             include("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-$os")
         }
     }
-
-    compileOnly("maven.modrinth:iris:${property("iris")}")
 }
 
 loom {

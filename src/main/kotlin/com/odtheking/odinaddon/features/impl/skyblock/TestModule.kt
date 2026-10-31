@@ -18,7 +18,7 @@ import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.render.BoxStyle
 import com.odtheking.odin.utils.render.textDim
-import org.lwjgl.glfw.GLFW
+import com.mojang.blaze3d.platform.InputConstants
 
 object TestModule : Module(
     name = "Test Module",
@@ -35,7 +35,7 @@ object TestModule : Module(
     private val color by ColorSetting("Example Color Setting", Colors.MINECRAFT_RED, true, desc = "Description.")
 
     private val dropdown by DropdownSetting("Example Dropdown Setting", false, "Description.")
-    private val keybind by KeybindSetting("Example Keybind Setting", GLFW.GLFW_KEY_UNKNOWN, desc = "Description.").withDependency { dropdown }
+    private val keybind by KeybindSetting("Example Keybind Setting", InputConstants.UNKNOWN, desc = "Description.").withDependency { dropdown }
 
     // These are not visible settings, but are used to store data under the module
     private val list by ListSetting("Example List Setting", mutableListOf("Item 1", "Item 2"))

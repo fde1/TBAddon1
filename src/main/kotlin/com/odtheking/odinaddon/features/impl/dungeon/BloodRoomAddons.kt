@@ -15,6 +15,7 @@ import com.odtheking.odinaddon.features.impl.skyblock.event.WorldEvent
 import com.odtheking.odinaddon.utils.EntityCollection
 import com.odtheking.odinaddon.utils.Timer
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
+import net.minecraft.network.protocol.game.VecDelta
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.monster.zombie.Zombie
 
@@ -79,7 +80,7 @@ object BloodRoomAddons : Module(
 
         onReceive<ClientboundMoveEntityPacket> {
             if (!DungeonUtils.inClear || !dialogueSaid || !awaitingMove) return@onReceive
-            if (xa == 0.toShort() && ya == 0.toShort() && za == 0.toShort()) return@onReceive
+            if (positionDelta == VecDelta.ZERO) return@onReceive
 
             val level = mc.level ?: return@onReceive
             if (watcherEntity != getEntity(level)) return@onReceive
