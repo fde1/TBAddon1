@@ -1,0 +1,101 @@
+package com.odtheking.odinaddon.features.impl.dungeon
+
+import com.odtheking.odin.clickgui.settings.RenderableSetting.Companion.withDependency
+import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
+import com.odtheking.odin.clickgui.settings.impl.SelectorSetting
+import com.odtheking.odin.events.ScreenEvent
+import com.odtheking.odin.events.core.on
+import com.odtheking.odin.events.core.onReceive
+import com.odtheking.odin.features.Module
+import com.odtheking.odin.utils.Colors
+import com.odtheking.odin.utils.equalsOneOf
+import com.odtheking.odin.utils.handlers.schedule
+import com.odtheking.odin.utils.itemId
+import com.odtheking.odin.utils.render.textDim
+import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
+import com.odtheking.odinaddon.features.impl.skyblock.event.PlayerInteractEvent
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket
+import net.minecraft.world.level.block.ChestBlock
+import net.minecraft.world.level.block.TrappedChestBlock
+
+object Secrets : Module(
+    name = "Secrets",
+    description = "Secret relevant features"
+) {
+    private val closeChest by BooleanSetting(
+        name = "Close Chests",
+        false,
+        desc = "Automatically closes chests in dungeons."
+    )
+    private val closeChestOption by SelectorSetting(
+        name = "Chest Close Method",
+        ChestCloseStyle.AUTO,
+        desc = "How to close the chest."
+    ).withDependency { closeChest }
+
+    enum class ChestCloseStyle(private val label: String) {
+        AUTO("Auto"),
+        INPUT("Input");
+
+        override fun toString(): String = label
+    }
+
+    private val preventBreakChest by BooleanSetting(
+        name = "Prevent Chest Break",
+        false,
+        desc = "Prevents breaking chests with Dungeonbreaker."
+    )
+
+    val SECRET_REGEX = Regex("§\\d+/\\d+\\sSecrets")
+    private var currSecrets = ""
+
+    private val secretHud by HUD("Secret Hud", desc = "Displays the number of secrets in a room.") { example ->
+        if (example) textDim("§6Secrets 67/67", 0, 0, Colors.WHITE)
+        else if (DungeonUtils.inDungeons && !currSecrets.isEmpty()) {
+            textDim(currSecrets, 0, 0)
+        }
+        else return@HUD 0 to 0
+
+    }
+
+    init {
+        onReceive<ClientboundSystemChatPacket> {
+            if (!overlay) return@onReceive
+
+            if (!DungeonUtils.inDungeons) {
+                currSecrets = ""
+                return@onReceive
+            }
+            currSecrets = SECRET_REGEX.find(content.string)?.value ?: ""
+        }
+
+        on<ScreenEvent.Open> {
+            if (screen !is AbstractContainerScreen<*> || closeChestOption != ChestCloseStyle.AUTO || !closeChest || !DungeonUtils.inDungeons || !screen.title.string.equalsOneOf(
+                    "Chest",
+                    "Large Chest"
+                )
+            ) return@on
+            schedule(1) {
+                mc.player?.containerMenu.let {
+                    mc.player?.closeContainer()
+                }
+            }
+        }
+
+        on<ScreenEvent.KeyPress> {
+            if (screen !is AbstractContainerScreen<*> || closeChestOption != ChestCloseStyle.INPUT || !closeChest || !DungeonUtils.inDungeons || !screen.title.string.equalsOneOf(
+                    "Chest",
+                    "Large Chest"
+                )
+            ) return@on
+            mc.player?.closeContainer()
+        }
+
+        on<PlayerInteractEvent.LEFT_CLICK.BLOCK> {
+            if (!preventBreakChest || !DungeonUtils.inDungeons || item?.itemId != "DUNGEONBREAKER") return@on
+            mc.level?.getBlockState(pos).takeIf { it?.block is ChestBlock || it?.block is TrappedChestBlock } ?: return@on
+            cancel()
+        }
+    }
+}
