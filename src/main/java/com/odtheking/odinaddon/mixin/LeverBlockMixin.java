@@ -40,9 +40,9 @@ public class LeverBlockMixin {
         if (!BigInteractables.INSTANCE.getEnabled() || !BigInteractables.INSTANCE.getLevers()) return;
         if (
                 this.tbaddon$customLeverShapes == null ||
-                        this.tbaddon$lastLeverWidth != BigInteractables.INSTANCE.getButtonWidth() ||
-                        this.tbaddon$lastLeverHeight != BigInteractables.INSTANCE.getButtonHeight()  ||
-                        this.tbaddon$lastLeverDepth != BigInteractables.INSTANCE.getButtonDepth() ||
+                        this.tbaddon$lastLeverWidth != BigInteractables.INSTANCE.getLeverWidth() ||
+                        this.tbaddon$lastLeverHeight != BigInteractables.INSTANCE.getLeverHeight()  ||
+                        this.tbaddon$lastLeverDepth != BigInteractables.INSTANCE.getLeverDepth() ||
                         this.tbaddon$lastFloorsSetting != BigInteractables.INSTANCE.getFullBlockFloors()
         )  {
             this.tbaddon$lastLeverWidth = BigInteractables.INSTANCE.getLeverWidth();

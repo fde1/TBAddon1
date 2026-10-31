@@ -30,7 +30,6 @@
     "KeyMappingAccessor",
     "KeyMappingMixin",
     "LivingEntityMixin",
-    "LocalPlayerMixin",
     "MapRendererMixin",
     "MinecraftMixin",
     "MouseHandlerMixin",
