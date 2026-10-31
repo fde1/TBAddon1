@@ -7,8 +7,7 @@
     "BlockInvoker",
     "ButtonBlockMixin",
     "LevelChunkMixin",
-    "LeverBlockMixin",
-    "LivingEntityMixin"
+    "LeverBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -30,6 +29,7 @@
     "KeyboardHandlerMixin",
     "KeyMappingAccessor",
     "KeyMappingMixin",
+    "LivingEntityMixin",
     "LocalPlayerMixin",
     "MapRendererMixin",
     "MinecraftMixin",
