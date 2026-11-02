@@ -20,7 +20,7 @@ public abstract class MapRendererMixin {
 
 
     @Inject(
-            method = "renderMap",
+            method = "renderMap(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/Collection;Ljava/util/Collection;Ljava/util/Collection;)V",
             at = @At(
                 value = "INVOKE",
                 target = "Lcom/odtheking/odin/features/impl/dungeon/map/MapRendererKt;renderDoors(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/Collection;)V",
@@ -37,10 +37,10 @@ public abstract class MapRendererMixin {
     }
 
     @Inject(
-            method = "renderMap",
+            method = "renderMap(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/Collection;Ljava/util/Collection;Ljava/util/Collection;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/odtheking/odin/features/impl/dungeon/map/MapRendererKt;renderPathHints(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/Collection;)V"
+                    target = "Lcom/odtheking/odin/features/impl/dungeon/map/MapRendererKt;renderPathHints(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/Collection;Ljava/util/Collection;)V"
             ),
             cancellable = true
     )
@@ -51,7 +51,7 @@ public abstract class MapRendererMixin {
     }
 
     @Inject(
-            method = "renderRoomText",
+            method = "renderRoomText(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lcom/odtheking/odin/features/impl/dungeon/map/tile/DungeonRoom;)V",
             at = @At("HEAD"),
             cancellable = true
     )
